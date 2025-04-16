@@ -1,0 +1,43 @@
+package com.hunglevi.expense_mdc.adapter
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.hunglevi.expense_mdc.databinding.ItemUserBinding
+import com.hunglevi.expense_mdc.data.model.User
+
+class UserAdapter(
+    private val users: List<User>,
+    private val onItemClick: (User) -> Unit
+) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+
+    inner class UserViewHolder(private val binding: ItemUserBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(user: User) {
+            binding.username.text = user.username
+            binding.email.text = user.email
+            binding.role.text = user.role
+            binding.createdAt.text = user.createdAt
+
+            // Handle item click
+            binding.root.setOnClickListener {
+                onItemClick(user)
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+        val binding = ItemUserBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return UserViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        holder.bind(users[position])
+    }
+
+    override fun getItemCount(): Int = users.size
+}
