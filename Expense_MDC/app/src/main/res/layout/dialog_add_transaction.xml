@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="16dp">
+
+    <!-- Category Selector -->
+    <Spinner
+            android:id="@+id/transactionCategorySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+    <!-- Transaction Amount -->
+    <EditText
+            android:id="@+id/transactionAmountInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Amount"
+            android:inputType="text|numberDecimal"
+            android:padding="8dp"/>
+
+    <!-- Transaction Description -->
+    <EditText
+            android:id="@+id/transactionDescriptionInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Description"
+            android:inputType="text"
+            android:padding="8dp"/>
+
+    <!-- Transaction Date -->
+    <EditText
+            android:id="@+id/transactionDateInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Date (YYYY-MM-DD)"
+            android:focusable="false"
+            android:padding="8dp"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end">
+        <!-- Cancel Button -->
+        <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_gravity="end"
+                android:backgroundTint="@android:color/darker_gray"
+                android:textColor="@android:color/white" />
+        <!-- Save Button -->
+        <Button
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:text="Save"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+</LinearLayout>

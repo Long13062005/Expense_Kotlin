@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:padding="16dp"
+              android:background="@drawable/background">
+
+    <!-- Logo -->
+    <ImageView
+            android:id="@+id/appLogo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/expense_logo2"
+            android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+                android:layout_width="340dp"
+                android:layout_height="400dp"
+                android:orientation="vertical"
+                android:padding="30dp"
+                android:background="@drawable/rounded_background">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:text="Đăng nhập"
+                android:textStyle="bold"/>
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Username"
+                android:textColorHint="#093030">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/usernameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:background="#DFF7E2"
+                    android:textColorHint="#093030"
+                    />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Password Input -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Password"
+                app:endIconMode="password_toggle"
+                android:textColorHint="#093030">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:background="#DFF7E2"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Login Button -->
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Login"
+                android:backgroundTint="#00D09E"
+                android:textColor="#093030"
+                app:cornerRadius="8dp"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
+
+        <!-- Signup and Fingerprint Options -->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="16dp">
+
+            <!-- Signup Button -->
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/signupButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#DFF7E2"
+                    android:textColor="#0E3E3E"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:text="Sign Up"
+
+                    android:layout_marginEnd="8dp"/>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- Social Login Options -->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="24dp">
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/facebookLoginButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:icon="@drawable/facebook_logo"
+                android:iconTint="@color/white"
+                style="@style/Widget.Material3.Button.Outlined"
+                android:text="Facebook"
+                 />
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/googleLoginButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:icon="@drawable/google_logo"
+                android:iconTint="@color/white"
+                style="@style/Widget.Material3.Button.Outlined"
+                android:text="Google"
+                 />
+    </LinearLayout>
+</LinearLayout>
