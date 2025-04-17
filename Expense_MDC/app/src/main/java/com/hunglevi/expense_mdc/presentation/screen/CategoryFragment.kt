@@ -202,7 +202,7 @@ class CategoryFragment : Fragment() {
                     binding.expenseValue.text = "$${String.format("%.2f", totalExpense)}"
 
                     // Update goal progress
-                    val currentAmount = totalIncome - totalExpense
+                    val currentAmount = totalIncome + totalExpense
                     val goalAmount = 20000.0 // This can be dynamic based on user input
                     val progress = ((currentAmount / goalAmount) * 100).coerceIn(0.0, 100.0).toInt()
 

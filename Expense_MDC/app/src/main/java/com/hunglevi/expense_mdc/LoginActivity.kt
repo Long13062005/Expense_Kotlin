@@ -16,17 +16,18 @@ import kotlinx.coroutines.launch
 
 
 class LoginActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityLoginBinding // Declare binding for the login screen
     private val userViewModel: UserViewModel by viewModels {
         ViewModelFactory(userRepository = UserRepository(AppDatabase.getInstance(applicationContext).userDao()))
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        lifecycleScope.launch {
+            userViewModel.insertExampleUser()
+        }
         // Handle login button click
         binding.loginButton.setOnClickListener {
             val email = binding.emailInput?.text.toString()
@@ -34,15 +35,15 @@ class LoginActivity : AppCompatActivity() {
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show()
-            }else if (email.length < 5 || password.length < 6) {
+            } else if (email.length < 5 || password.length < 6) {
                 Toast.makeText(this, "Email hoặc mật khẩu không hợp lệ!", Toast.LENGTH_SHORT).show()
             } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 Toast.makeText(this, "Email không hợp lệ!", Toast.LENGTH_SHORT).show()
-            }
-            else {
+            } else {
                 userViewModel.authenticateUser(email, password) // Trigger authentication
             }
         }
+
 
         // Observe authentication result using StateFlow
         lifecycleScope.launch {
@@ -52,17 +53,30 @@ class LoginActivity : AppCompatActivity() {
                     with(sharedPref.edit()) {
                         putInt("USER_ID", user.id)
                         putString("USERNAME", user.username)
+                        putString("USER_ROLE", user.role)
                         apply()
                     }
                     when (user.role) {
                         "admin" -> {
                             Toast.makeText(this@LoginActivity, "Welcome, Admin!", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java)) // Navigate to Admin Dashboard
+                            startActivity(
+                                Intent(
+                                    this@LoginActivity,
+                                    MainActivity::class.java
+                                )
+                            ) // Navigate to Admin Dashboard
                         }
+
                         "user" -> {
                             Toast.makeText(this@LoginActivity, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java)) // Navigate to Main Activity
+                            startActivity(
+                                Intent(
+                                    this@LoginActivity,
+                                    MainActivity::class.java
+                                )
+                            ) // Navigate to Main Activity
                         }
+
                         else -> {
                             Toast.makeText(this@LoginActivity, "Invalid role detected!", Toast.LENGTH_SHORT).show()
                         }
