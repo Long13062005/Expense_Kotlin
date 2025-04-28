@@ -14,7 +14,7 @@ import com.hunglevi.expense_mdc.data.model.User
 //@Database(entities = [Transaction::class, Feedback::class, Budget::class, Report::class, Category::class, User::class], version = 1, exportSchema = false)
 @Database(
     entities = [Budget::class, Category::class, Feedback::class, Report::class, Transaction::class, User::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

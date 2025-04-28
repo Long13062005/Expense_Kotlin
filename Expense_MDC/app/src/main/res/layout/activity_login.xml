@@ -19,9 +19,9 @@
 
     <LinearLayout
             android:layout_width="340dp"
-            android:layout_height="400dp"
+            android:layout_height="490dp"
             android:orientation="vertical"
-            android:padding="30dp"
+            android:padding="50dp"
 
             android:background="@drawable/rounded_background">
 
@@ -51,6 +51,17 @@
                     android:textColorHint="#093030"
                     />
         </com.google.android.material.textfield.TextInputLayout>
+        <!-- Error Text for Email -->
+        <TextView
+                android:id="@+id/emailErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Invalid email format"
+                android:textColor="@color/red"
+                android:visibility="gone"
+                android:textSize="10sp"
+                android:layout_marginHorizontal="16dp" />
+
 
         <!-- Password Input -->
         <com.google.android.material.textfield.TextInputLayout
@@ -72,6 +83,17 @@
                     android:textColorHint="#093030"
                     />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Error Text for Password -->
+        <TextView
+                android:id="@+id/passwordErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Password must be at least 6 characters"
+                android:textColor="@color/red"
+                android:visibility="gone"
+                android:textSize="10sp"
+                android:layout_marginHorizontal="16dp" />
 
         <LinearLayout
                 android:layout_width="match_parent"

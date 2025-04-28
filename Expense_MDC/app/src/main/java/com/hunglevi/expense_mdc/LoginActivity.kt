@@ -2,6 +2,7 @@ package com.hunglevi.expense_mdc
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,23 +29,39 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             userViewModel.insertExampleUser()
         }
-        // Handle login button click
         binding.loginButton.setOnClickListener {
             val email = binding.emailInput?.text.toString()
             val password = binding.passwordInput.text.toString()
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show()
-            } else if (email.length < 5 || password.length < 6) {
-                Toast.makeText(this, "Email hoặc mật khẩu không hợp lệ!", Toast.LENGTH_SHORT).show()
-            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(this, "Email không hợp lệ!", Toast.LENGTH_SHORT).show()
+            var isValid = true
+
+            // Validate Email
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                binding.emailInput?.error = "Invalid email format"
+                binding.emailErrorText?.visibility = View.VISIBLE
+                isValid = false
             } else {
+                binding.emailInput?.error = null
+                binding.emailErrorText?.visibility = View.GONE
+            }
+
+            // Validate Password
+            if (password.length < 6) {
+                binding.passwordInput.error = "Password must be at least 6 characters"
+                binding.passwordErrorText?.visibility = View.VISIBLE
+                isValid = false
+            } else {
+                binding.passwordInput.error = null
+                binding.passwordErrorText?.visibility = View.GONE
+            }
+
+            if (isValid) {
                 userViewModel.authenticateUser(email, password) // Trigger authentication
+
+                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+                // Proceed with authentication logic
             }
         }
-
-
         // Observe authentication result using StateFlow
         lifecycleScope.launch {
             userViewModel.authenticationResult.collect { user ->
@@ -53,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
                     with(sharedPref.edit()) {
                         putInt("USER_ID", user.id)
                         putString("USERNAME", user.username)
+                        putString("EMAIL", user.email)
                         putString("USER_ROLE", user.role)
                         apply()
                     }

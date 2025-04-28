@@ -22,28 +22,4 @@
             android:inputType="numberDecimal"
             android:padding="8dp" />
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end"
-            android:paddingTop="16dp">
-
-        <Button
-                android:id="@+id/cancelButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel"
-                android:backgroundTint="@android:color/darker_gray"
-                android:textColor="@android:color/white" />
-
-        <Button
-                android:id="@+id/saveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Save"
-                android:layout_marginStart="8dp"
-                android:backgroundTint="@android:color/holo_green_dark"
-                android:textColor="@android:color/white" />
-    </LinearLayout>
 </LinearLayout>

@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.hunglevi.expense_mdc.R
 import com.hunglevi.expense_mdc.data.dao.AppDatabase
+import com.hunglevi.expense_mdc.data.model.User
 import com.hunglevi.expense_mdc.data.repository.UserRepository
 import com.hunglevi.expense_mdc.databinding.FragmentEditProfileBinding
 import com.hunglevi.expense_mdc.presentation.viewmodel.UserViewModel
@@ -45,29 +46,45 @@ class EditSettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val sharedPref = context?.getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val userId = sharedPref?.getInt("USERID", -1) ?: -1
         val username = sharedPref?.getString("USERNAME", null)
-        val userId = sharedPref?.getInt("USERID", -1)
+        val email = sharedPref?.getString("EMAIL", null)
         val userImage = sharedPref?.getString("PROFILE_IMAGE_URI", null)
-
+        binding.usernameInput.setText(username)
+        binding.emailInput.setText(email)
         // Load profile image
         loadProfileImage()
 
-        // Set profile name
-        binding.userName.text = username ?: "Unknown User"
 
         // Handle Profile Image Click
         binding.profileImage.setOnClickListener {
             openImagePicker()
         }
-
         // Handle Update Button Click
         binding.updateButton.setOnClickListener {
             val newUsername = binding.usernameInput.text.toString()
             val newEmail = binding.emailInput.text.toString()
 
             if (newUsername.isNotBlank() && newEmail.isNotBlank()) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val user = userViewModel.getUserById(userId)
+
+                    if (user != null) {
+                        val updatedUser = user.copy(
+                            username = newUsername,
+                            email = newEmail
+                        )
+                        userViewModel.updateUser(updatedUser)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "User not found",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
                 sharedPref?.edit()
                     ?.putString("USERNAME", newUsername)
                     ?.putString("EMAIL", newEmail)
@@ -79,28 +96,6 @@ class EditSettingsFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
 
-                viewLifecycleOwner.lifecycleScope.launch {
-                    val userId = sharedPref?.getInt("USERID", -1) ?: -1
-                    val user = userViewModel.getUserById(userId)
-
-                    if (user != null) {
-                        val updatedUser = user.copy(
-                            id = userId,
-                            username = newUsername,
-                            email = newEmail,
-                            role = user.role, // Use the existing role
-                            profileImage = userImage, // Retrieve saved image URI
-                            createdAt = user.createdAt // Keep the original creation date
-                        )
-                        userViewModel.updateUser(updatedUser)
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "User not found",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
             } else {
                 Toast.makeText(
                     requireContext(),

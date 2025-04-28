@@ -1,5 +1,6 @@
 package com.hunglevi.expense_mdc.presentation.screen
 
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -61,10 +62,11 @@ class AnalysisFragment : Fragment() {
                     // Update financial summary UI
                     binding.incomeValue.text = "$${String.format("%.2f", totalIncome)}"
                     binding.expenseValue.text = "$${String.format("%.2f", totalExpense)}"
-
+                    val sharedPref = requireContext().getSharedPreferences("BudgetPrefs", Context.MODE_PRIVATE)
+                    val savedBudget = sharedPref.getFloat("USER_BUDGET", 0f)
+                    val goalAmount = savedBudget.toDouble()
                     // Update goal progress
                     val currentAmount = totalIncome + totalExpense
-                    val goalAmount = 20000.0 // This can be dynamic based on user input
                     val progress = ((currentAmount / goalAmount) * 100).coerceIn(0.0, 100.0).toInt()
 
                     val currentProgress = calculateProgress(currentAmount, goalAmount)

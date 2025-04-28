@@ -105,6 +105,7 @@ class SettingsFragment : Fragment() {
         binding.userId.text = userId.toString()
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
