@@ -30,6 +30,7 @@ import com.hunglevi.expense_mdc.presentation.viewmodel.TransactionViewModel
 import com.hunglevi.expense_mdc.presentation.viewmodel.ViewModelFactory
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlin.getValue
@@ -37,7 +38,6 @@ import kotlin.getValue
 class TransactionFragment : Fragment() {
     private lateinit var binding: FragmentTransactionBinding
     private val transactionViewModel: TransactionViewModel by viewModels {
-
         ViewModelFactory(
             transactionRepository = TransactionRepository(
                 AppDatabase.getInstance(requireContext()).transactionDao() // Use TransactionDao here
@@ -45,7 +45,6 @@ class TransactionFragment : Fragment() {
         )
     }
     private val categoryViewModel: CategoryViewModel by viewModels {
-
         ViewModelFactory(
             categoryRepository = CategoryRepository(
                 AppDatabase.getInstance(requireContext()).categoryDao() // Use TransactionDao here
@@ -127,13 +126,22 @@ class TransactionFragment : Fragment() {
         }
     }
 
+    suspend fun fetchCategoryName(categoryId: Int): String {
+        val category = categoryViewModel.getCategoryById(categoryId)
+        return category?.name ?: ""
+    }
+
     private fun setupAdapter() {
         transactionAdapter = TransactionsAdapter(
             transactions = emptyList(),
             onEdit = { transaction -> openEditTransactionDialog(transaction) },
             onDelete = { transaction -> showDeleteConfirmation(transaction) },
             fetchCategoryName = { categoryId ->
-                "Unknown Category"
+                var categoryName = ""
+                viewLifecycleOwner.lifecycleScope.launch {
+                    categoryName = fetchCategoryName(categoryId) // Call the suspend function inside a coroutine
+                }
+                categoryName
             }
         )
 

@@ -29,6 +29,10 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             userViewModel.insertExampleUser()
         }
+        lifecycleScope.launch {
+            userViewModel.insertExampleUser()
+        }
+
         binding.loginButton.setOnClickListener {
             val email = binding.emailInput?.text.toString()
             val password = binding.passwordInput.text.toString()

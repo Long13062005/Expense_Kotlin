@@ -74,4 +74,8 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     suspend fun getUserById(id: Int): User? {
         return repository.getUserById(id)
     }
+    suspend fun getUserByUsername(username : String): User? {
+        return repository.getUserByUsername(username)
+    }
+
 }

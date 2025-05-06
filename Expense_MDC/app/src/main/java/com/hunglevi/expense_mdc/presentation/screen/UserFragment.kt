@@ -90,10 +90,14 @@ class UserFragment : Fragment() {
 
         val usernameInput = dialogView.findViewById<EditText>(R.id.usernameInput)
         val emailInput = dialogView.findViewById<EditText>(R.id.emailInput)
+        val roleInput = dialogView.findViewById<EditText>(R.id.roleInput)
 
         // Pre-fill fields with current user data
         usernameInput.setText(user.username)
         emailInput.setText(user.email)
+        roleInput.setText(user.role)
+
+
 
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save") { _, _ ->
             val editedUsername = usernameInput.text.toString()

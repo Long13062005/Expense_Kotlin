@@ -118,7 +118,7 @@ class HomeFragment : Fragment() {
             transactions = emptyList(),
             onEdit = { transaction -> openEditTransactionDialog(transaction) },
             onDelete = { transaction -> showDeleteConfirmation(transaction) },
-            fetchCategoryName = { categoryId -> categoryMap[categoryId] ?: "Unknown Category" }
+            fetchCategoryName = { categoryId -> categoryMap[categoryId] ?: "" } // Fetch category name dynamically
         )
 
         binding.transactionsRecyclerView.apply {

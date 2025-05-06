@@ -29,6 +29,8 @@
             android:layout_height="wrap_content"
             android:hint="Enter Role"
             android:inputType="textPersonName"
+            android:focusable="false"
+            android:clickable="false"
             android:padding="8dp" />
 
 </LinearLayout>

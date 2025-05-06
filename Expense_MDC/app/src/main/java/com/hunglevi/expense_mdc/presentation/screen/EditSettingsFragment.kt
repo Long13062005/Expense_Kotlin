@@ -68,8 +68,8 @@ class EditSettingsFragment : Fragment() {
 
             if (newUsername.isNotBlank() && newEmail.isNotBlank()) {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    val user = userViewModel.getUserById(userId)
-
+                    val username = sharedPref?.getString("USERNAME", null)
+                    val user = userViewModel.getUserByUsername(username.toString())
                     if (user != null) {
                         val updatedUser = user.copy(
                             username = newUsername,
