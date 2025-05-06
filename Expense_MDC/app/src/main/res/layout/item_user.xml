@@ -1,40 +1,63 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:padding="12dp"
-              android:background="@drawable/rounded_card_background">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
 
     <TextView
             android:id="@+id/username"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Username"
-            android:textSize="16sp"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textSize="16sp"/>
 
     <TextView
             android:id="@+id/email"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:textColor="@color/white"
             android:layout_height="wrap_content"
-            android:text="Email"
-            android:textSize="14sp"
-            android:textColor="@color/gray" />
+            android:text="Email"/>
 
     <TextView
             android:id="@+id/role"
-            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Role"
-            android:textSize="14sp"
-            android:textColor="@color/blue" />
+            android:text="Role"/>
 
     <TextView
             android:id="@+id/createdAt"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Created At"/>
+
+    <!-- Edit and Delete Buttons -->
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Created At"
-            android:textSize="12sp"
-            android:textColor="@color/blue" />
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:paddingTop="8dp">
+
+        <ImageButton
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit"
+                android:backgroundTint="@color/orange"
+                android:contentDescription="Edit user"
+                android:layout_marginEnd="8dp"/>
+
+        <ImageButton
+                android:id="@+id/deleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/red"
+                android:background="@drawable/delete"
+                android:contentDescription="Delete user"/>
+    </LinearLayout>
 </LinearLayout>

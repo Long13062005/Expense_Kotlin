@@ -1,5 +1,6 @@
 package com.hunglevi.expense_mdc.presentation.screen
 
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -45,9 +46,8 @@ class AnalysisFragment : Fragment() {
         val userId = sharedPref?.getInt("USER_ID", -1)
         transactionViewModel.setUserId(userId ?: -1)
         // Initialize all sections
+        updateBarChartForLast7Days()
         setupFinancialSummary()
-        setupTabs()
-        setupBarChart()
         setupNavigation()
     }
 
@@ -62,10 +62,11 @@ class AnalysisFragment : Fragment() {
                     // Update financial summary UI
                     binding.incomeValue.text = "$${String.format("%.2f", totalIncome)}"
                     binding.expenseValue.text = "$${String.format("%.2f", totalExpense)}"
-
+                    val sharedPref = requireContext().getSharedPreferences("BudgetPrefs", Context.MODE_PRIVATE)
+                    val savedBudget = sharedPref.getFloat("USER_BUDGET", 0f)
+                    val goalAmount = savedBudget.toDouble()
                     // Update goal progress
-                    val currentAmount = totalIncome - totalExpense
-                    val goalAmount = 20000.0 // This can be dynamic based on user input
+                    val currentAmount = totalIncome + totalExpense
                     val progress = ((currentAmount / goalAmount) * 100).coerceIn(0.0, 100.0).toInt()
 
                     val currentProgress = calculateProgress(currentAmount, goalAmount)
@@ -116,69 +117,15 @@ class AnalysisFragment : Fragment() {
         }
     }
 
+    private fun updateBarChartForLast7Days() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val (incomeData, expenseData) = transactionViewModel.getTransactionsForLast7Days()
+            val incomeDataFloat: List<Float> = incomeData.map { it.toFloat() }
+            val expenseDataFloat: List<Float> = expenseData.map { it.toFloat() }
 
-    private fun setupTabs() {
-        // Handle tab selection with dynamic updates
-        binding.dayTab.setOnClickListener { selectTab("Day", binding.dayTab) }
-        binding.weekTab.setOnClickListener { selectTab("Week", binding.weekTab) }
-        binding.monthTab.setOnClickListener { selectTab("Month", binding.monthTab) }
-        binding.yearTab.setOnClickListener { selectTab("Year", binding.yearTab) }
-    }
-
-    private fun selectTab(period: String, selectedTab: View) {
-        updateBarChartData(period)
-        updateTabFocus(selectedTab)
-    }
-
-    private fun updateBarChartData(period: String) {
-        val incomeData: List<Float>
-        val expenseData: List<Float>
-
-        // Set data dynamically based on the selected period
-        when (period) {
-            "Day" -> {
-                incomeData = listOf(500f, 1000f, 1500f, 2000f)
-                expenseData = listOf(300f, 700f, 1100f, 1500f)
-            }
-            "Week" -> {
-                incomeData = listOf(3000f, 4000f, 5000f, 6000f, 7000f, 8000f, 9000f)
-                expenseData = listOf(1500f, 2500f, 3500f, 4000f, 5000f, 6000f, 7000f)
-            }
-            "Month" -> {
-                incomeData = listOf(7000f, 8000f, 9000f, 10000f)
-                expenseData = listOf(5000f, 6000f, 7000f, 8000f)
-            }
-            "Year" -> {
-                incomeData = listOf(50000f, 60000f, 70000f)
-                expenseData = listOf(25000f, 35000f, 45000f)
-            }
-            else -> return
+            binding.barChartView.setData(incomeDataFloat, expenseDataFloat, "Last 7 Days")
         }
-
-        // Update the bar chart with the new dataset
-        binding.barChartView.setData(incomeData, expenseData, period)
     }
-
-    private fun updateTabFocus(selectedTab: View) {
-        // Reset all tabs to default focus effect
-        binding.dayTab.setBackgroundResource(R.drawable.tab_focus_effect)
-        binding.weekTab.setBackgroundResource(R.drawable.tab_focus_effect)
-        binding.monthTab.setBackgroundResource(R.drawable.tab_focus_effect)
-        binding.yearTab.setBackgroundResource(R.drawable.tab_focus_effect)
-
-        // Highlight the selected tab
-        selectedTab.setBackgroundResource(R.drawable.tab_selected_effect)
-    }
-
-    private fun setupBarChart() {
-        // Initial dataset for the bar chart
-        val incomeData = listOf(1000f, 3000f, 2000f, 5000f, 7000f, 8000f, 10000f)
-        val expenseData = listOf(800f, 1500f, 1000f, 2500f, 4000f, 5000f, 6000f)
-
-        // Configure bar chart with initial data
-        binding.barChartView.setData(incomeData, expenseData, "Day")
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

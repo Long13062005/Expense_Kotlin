@@ -7,21 +7,29 @@ import com.hunglevi.expense_mdc.databinding.ItemUserBinding
 import com.hunglevi.expense_mdc.data.model.User
 
 class UserAdapter(
-    private val users: List<User>,
-    private val onItemClick: (User) -> Unit
+    private var users: List<User>, // Make this variable mutable
+    private val onItemClick: (User) -> Unit,
+    private val onEditClick: (User) -> Unit,
+    private val onDeleteClick: (User) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(private val binding: ItemUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(user: User) {
             binding.username.text = user.username
             binding.email.text = user.email
             binding.role.text = user.role
             binding.createdAt.text = user.createdAt
 
-            // Handle item click
             binding.root.setOnClickListener {
                 onItemClick(user)
+            }
+            binding.editButton.setOnClickListener {
+                onEditClick(user)
+            }
+            binding.deleteButton.setOnClickListener {
+                onDeleteClick(user)
             }
         }
     }
@@ -40,4 +48,10 @@ class UserAdapter(
     }
 
     override fun getItemCount(): Int = users.size
+
+    // Add this method to dynamically update the user list
+    fun updateUsers(newUsers: List<User>) {
+        users = newUsers
+        notifyDataSetChanged() // Notify the adapter that the data has changed
+    }
 }

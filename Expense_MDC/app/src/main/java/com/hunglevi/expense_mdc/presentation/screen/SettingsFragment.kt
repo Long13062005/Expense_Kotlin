@@ -34,6 +34,8 @@ class SettingsFragment : Fragment() {
         val sharedPref = context?.getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val userId = sharedPref?.getInt("USER_ID", -1)
         val username = sharedPref?.getString("USERNAME", null)
+        val userRole = sharedPref?.getString("USER_ROLE", null)
+
         // Example: Set profile image using Glide
         val profileImageUrl = "https://upload.wikimedia.org/wikipedia/vi/4/48/%E1%BA%A2nh_b%C3%ACa_Minecraft.png"
         Glide.with(requireContext())
@@ -42,6 +44,23 @@ class SettingsFragment : Fragment() {
             .into(binding.profileImage)
 
         // Set up click listeners for menu options
+        binding.userManage.setOnClickListener {
+        if(userRole == "admin") {
+            val userFragment = UserFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in_right,  // Enter animation
+                    R.anim.slide_out_left,  // Exit animation
+                    R.anim.slide_in_left,   // Pop enter animation (when back button is pressed)
+                    R.anim.slide_out_right  // Pop exit animation (when back button is pressed)
+                )
+                .replace(R.id.fragmentContainer, userFragment)
+                .addToBackStack(null) // Add fragment to back stack for navigation
+                .commit()
+        } else {
+            Toast.makeText(context, "You do not have permission to access this feature.", Toast.LENGTH_SHORT).show()
+        }}
+
         binding.editPersonalInfo.setOnClickListener {
             val editPersonalInfoFragment = EditSettingsFragment()
             requireActivity().supportFragmentManager.beginTransaction()
@@ -85,6 +104,7 @@ class SettingsFragment : Fragment() {
         binding.userName.text = username
         binding.userId.text = userId.toString()
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

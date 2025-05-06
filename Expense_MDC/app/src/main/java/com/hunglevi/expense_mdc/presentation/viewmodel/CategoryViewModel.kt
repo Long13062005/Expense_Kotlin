@@ -48,4 +48,9 @@ class CategoryViewModel(private val repository: CategoryRepository) : ViewModel(
             repository.deleteCategory(category)
         }
     }
+    fun insertExampleCategory(){
+        viewModelScope.launch {
+            repository.insertExampleCategory()
+        }
+    }
 }

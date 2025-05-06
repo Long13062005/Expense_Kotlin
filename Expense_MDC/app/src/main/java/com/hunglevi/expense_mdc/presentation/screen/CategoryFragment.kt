@@ -1,6 +1,7 @@
 package com.hunglevi.expense_mdc.presentation.screen
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
@@ -202,9 +203,12 @@ class CategoryFragment : Fragment() {
                     binding.expenseValue.text = "$${String.format("%.2f", totalExpense)}"
 
                     // Update goal progress
-                    val currentAmount = totalIncome - totalExpense
-                    val goalAmount = 20000.0 // This can be dynamic based on user input
+                    val sharedPref = requireContext().getSharedPreferences("BudgetPrefs", Context.MODE_PRIVATE)
+                    val savedBudget = sharedPref.getFloat("USER_BUDGET", 0f)
+                    val goalAmount = savedBudget.toDouble()
+                    val currentAmount = totalIncome + totalExpense
                     val progress = ((currentAmount / goalAmount) * 100).coerceIn(0.0, 100.0).toInt()
+
 
                     val currentProgress = calculateProgress(currentAmount, goalAmount)
 

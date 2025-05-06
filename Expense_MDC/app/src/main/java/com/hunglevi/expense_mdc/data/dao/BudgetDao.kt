@@ -19,6 +19,10 @@ interface BudgetDao {
     @Query("SELECT * FROM budgets WHERE id = :id")
     suspend fun getBudgetById(id: Int): Budget?
 
+    @Query("SELECT * FROM budgets WHERE userId = :id")
+    suspend fun getBudgetByUserId(id: Int): Budget?
+
+
     @Query("SELECT SUM(amount) FROM budgets")
     fun getTotalBudget(): Flow<Double>
 

@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.hunglevi.expense_mdc.LoginActivity
 import com.hunglevi.expense_mdc.data.dao.AppDatabase
 import com.hunglevi.expense_mdc.data.repository.UserRepository
 import com.hunglevi.expense_mdc.databinding.ActivityRegisterBinding
@@ -58,22 +59,42 @@ class RegisterActivity : AppCompatActivity() {
         lifecycleScope.launch {
             userViewModel.authenticationResult.collect { user ->
                 if (user != null) {
+                    val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                    with(sharedPref.edit()) {
+                        putInt("USER_ID", user.id)
+                        putString("USERNAME", user.username)
+                        putString("EMAIL", user.email)
+                        putString("USER_ROLE", user.role)
+                        apply()
+                    }
                     when (user.role) {
                         "admin" -> {
                             Toast.makeText(this@RegisterActivity, "Welcome, Admin!", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@RegisterActivity, MainActivity::class.java)) // Navigate to Admin Dashboard
+                            startActivity(
+                                Intent(
+                                    this@RegisterActivity,
+                                    MainActivity::class.java
+                                )
+                            ) // Navigate to Admin Dashboard
                         }
+
                         "user" -> {
-                            Toast.makeText(this@RegisterActivity, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@RegisterActivity, MainActivity::class.java)) // Navigate to Main Activity
+                            Toast.makeText(this@RegisterActivity, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
+                            startActivity(
+                                Intent(
+                                    this@RegisterActivity,
+                                    MainActivity::class.java
+                                )
+                            ) // Navigate to Main Activity
                         }
+
                         else -> {
                             Toast.makeText(this@RegisterActivity, "Invalid role detected!", Toast.LENGTH_SHORT).show()
                         }
                     }
                     finish()
                 } else {
-                    Toast.makeText(this@RegisterActivity, "Thông tin đăng ký không hợp lệ!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@RegisterActivity, "Thông tin đăng nhập không hợp lệ!", Toast.LENGTH_SHORT).show()
                 }
             }
         }

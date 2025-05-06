@@ -44,24 +44,29 @@ class CustomBarChartView @JvmOverloads constructor(
     fun setData(income: List<Float>, expense: List<Float>, period: String) {
         val itemCount = minOf(income.size, expense.size)
 
-        // Update labels based on period
         labels = when (period) {
-            "Day" -> List(itemCount) { "Day ${it + 1}" }
-            "Week" -> List(itemCount) { "Week ${it + 1}" }
-            "Month" -> List(itemCount) { "Month ${it + 1}" }
-            "Year" -> List(itemCount) { "Year ${it + 1}" }
+            "Last 7 Days" -> List(itemCount) { "Day ${it + 1}" } // Generate labels for last 7 days
             else -> List(itemCount) { "Item ${it + 1}" } // Default fallback
         }
 
         incomeData = income.take(itemCount)
         expenseData = expense.take(itemCount)
 
-        invalidate() // Redraw the view
+        invalidate() // Trigger redraw
     }
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        if (incomeData.isEmpty() && expenseData.isEmpty()) {
+            canvas.drawText(
+                "No data for Last 7 Days",
+                width / 2f - textPaint.measureText("No data for Last 7 Days") / 2f,
+                height / 2f,
+                textPaint.apply { textSize = 40f; color = Color.GRAY }
+            )
+            return
+        }
         val xStart = 100f
         val yEnd = height - 100f
         val chartHeight = yEnd - 200f
@@ -108,7 +113,7 @@ class CustomBarChartView @JvmOverloads constructor(
 
             canvas.drawRect(
                 x + barWidth + 10f,
-                yEnd - expenseHeight,
+                yEnd + expenseHeight,
                 x + barWidth * 2 + 10f,
                 yEnd,
                 expensePaint

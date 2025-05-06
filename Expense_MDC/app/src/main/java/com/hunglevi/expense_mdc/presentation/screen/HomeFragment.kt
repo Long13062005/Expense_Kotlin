@@ -1,6 +1,7 @@
 package com.hunglevi.expense_mdc.presentation.screen
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -64,6 +65,8 @@ class HomeFragment : Fragment() {
         transactionViewModel.setUserId(userId ?: -1) // Set user ID in ViewModel
         // Initialize the adapter with an empty list
         setupAdapter()
+        loadBudget()
+
         // Set up RecyclerView with the adapter
         binding.transactionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -91,7 +94,10 @@ class HomeFragment : Fragment() {
 
                     // Update goal progress
                     val currentAmount = totalIncome + totalExpense
-                    val goalAmount = 20000.0 // This can be dynamic based on user input
+                    val sharedPref = requireContext().getSharedPreferences("BudgetPrefs", Context.MODE_PRIVATE)
+                    val savedBudget = sharedPref.getFloat("USER_BUDGET", 0f)
+                    val goalAmount = savedBudget.toDouble()
+                    binding.progressGoal.text = "Goal: $${String.format("%.2f", savedBudget)}"
                     val progress = ((currentAmount / goalAmount) * 100).coerceIn(0.0, 100.0).toInt()
 
                     val currentProgress = calculateProgress(currentAmount, goalAmount)
@@ -112,7 +118,7 @@ class HomeFragment : Fragment() {
             transactions = emptyList(),
             onEdit = { transaction -> openEditTransactionDialog(transaction) },
             onDelete = { transaction -> showDeleteConfirmation(transaction) },
-            fetchCategoryName = { categoryId -> categoryMap[categoryId] ?: "Unknown Category" }
+            fetchCategoryName = { categoryId -> categoryMap[categoryId] ?: "" } // Fetch category name dynamically
         )
 
         binding.transactionsRecyclerView.apply {
@@ -220,22 +226,36 @@ class HomeFragment : Fragment() {
 
         dialog.show()
     }
+    private fun loadBudget() {
+        val sharedPref = requireContext().getSharedPreferences("BudgetPrefs", Context.MODE_PRIVATE)
+        val savedBudget = sharedPref.getFloat("USER_BUDGET", 0f)
+        binding.progressGoal.text = "Goal: $${String.format("%.2f", savedBudget)}"
+    }
+    private fun updateBudget(goalAmount: Double) {
+        val sharedPref = requireContext().getSharedPreferences("BudgetPrefs", Context.MODE_PRIVATE)
+        sharedPref.edit().putFloat("USER_BUDGET", goalAmount.toFloat()).apply()
+    }
 
 
     private fun openEditGoalDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_goal, null)
+        val goalInputField = dialogView.findViewById<EditText>(R.id.goalAmountInput)
+
         val dialogBuilder = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .setTitle("Edit Financial Goal")
             .setPositiveButton("Save") { dialog, _ ->
-                val goalInput = dialogView.findViewById<EditText>(R.id.goalAmountInput)?.text.toString()
+                val goalInput = goalInputField?.text.toString().trim()
+
                 if (goalInput.isNotBlank()) {
                     val goalAmount = goalInput.toDoubleOrNull()
-                    if (goalAmount != null) {
+                    if (goalAmount != null && goalAmount > 0) {
+                        updateBudget(goalAmount) // Save budget update
                         binding.progressGoal.text = "Goal: $${String.format("%.2f", goalAmount)}"
+                        Toast.makeText(requireContext(), "Budget updated successfully!", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     } else {
-                        Toast.makeText(requireContext(), "Invalid amount!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Invalid amount! Please enter a valid budget value.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(requireContext(), "Please enter a goal amount!", Toast.LENGTH_SHORT).show()
@@ -244,7 +264,7 @@ class HomeFragment : Fragment() {
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
+
         dialogBuilder.create().show()
     }
-
 }

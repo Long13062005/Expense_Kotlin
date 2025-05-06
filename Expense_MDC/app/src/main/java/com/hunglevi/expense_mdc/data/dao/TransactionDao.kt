@@ -35,4 +35,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE createdAt BETWEEN :startDate AND :endDate")
     fun filterTransactionsByDateRange(startDate: String, endDate: String): Flow<List<Transaction>>
+
+    @Query("SELECT * FROM transactions WHERE date >= :startDate AND date <= :endDate AND userId = :userId")
+    suspend fun getTransactionsForPeriod(startDate: String, endDate: String,userId: Int): List<Transaction>
 }

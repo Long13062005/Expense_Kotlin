@@ -20,6 +20,14 @@ class TransactionViewModel(private val repository: TransactionRepository) : View
         userId.value = id
     }
 
+    suspend fun getTransactionsForLast7Days(): Pair<List<Double>, List<Double>> {
+        val transactions = repository.getTransactionsForLast7Days(userId = userId.value ?: -1)
+
+        val incomeData = transactions.filter { it.type == "Income" }.map { it.amount }
+        val expenseData = transactions.filter { it.type == "Expense" }.map { it.amount }
+
+        return Pair(incomeData, expenseData)
+    }
     val transactions: Flow<List<Transaction>> = userId.filterNotNull().flatMapLatest { id ->
         repository.getAllTransactionsByUserId(id)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())

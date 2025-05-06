@@ -1,6 +1,5 @@
 package com.hunglevi.expense_mdc.presentation.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
     val users: Flow<List<User>> = repository.allUsers
+    private val userId = MutableStateFlow<Int?>(null)
+    fun setUserId(id: Int) {
+        userId.value = id
+    }
 
     // Use StateFlow for authentication result
     private val _authenticationResult = MutableStateFlow<User?>(null)
@@ -26,7 +29,8 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
                 email = email,
                 password = password, // Consider hashing passwords in real applications
                 role = "user", // Default role
-                createdAt = System.currentTimeMillis().toString() // Example timestamp
+                createdAt = System.currentTimeMillis().toString(),
+                profileImage = "" // Example timestamp
             )
             try {
                 repository.insertUser(user)
@@ -62,4 +66,16 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
             repository.deleteUser(user)
         }
     }
+    fun insertExampleUser() {
+        viewModelScope.launch {
+            repository.insertExampleUser()
+        }
+    }
+    suspend fun getUserById(id: Int): User? {
+        return repository.getUserById(id)
+    }
+    suspend fun getUserByUsername(username : String): User? {
+        return repository.getUserByUsername(username)
+    }
+
 }

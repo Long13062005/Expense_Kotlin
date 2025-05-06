@@ -11,5 +11,6 @@ data class User(
     val email: String,         // User's email
     val password: String,      // User's password
     val role: String,      // User's role (e.g., admin, user)
-    val createdAt: String,     // Account creation date)
+    val createdAt: String,
+    val profileImage: String?,     // Account creation date)
      )
