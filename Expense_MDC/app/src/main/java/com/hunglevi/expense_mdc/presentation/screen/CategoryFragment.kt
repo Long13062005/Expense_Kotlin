@@ -76,6 +76,7 @@ class CategoryFragment : Fragment() {
         }
 
     }
+
     private fun showEditOrDeleteDialog(category: Category) {
         val options = arrayOf("Edit Category", "Delete Category")
 
@@ -91,6 +92,7 @@ class CategoryFragment : Fragment() {
             .create()
             .show()
     }
+
     private fun openEditCategoryDialog(category: Category) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_category, null)
 
@@ -131,6 +133,7 @@ class CategoryFragment : Fragment() {
 
         dialog.show()
     }
+
     private fun showDeleteCategoryConfirmation(category: Category) {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Category")
@@ -145,21 +148,6 @@ class CategoryFragment : Fragment() {
             }
             .create()
             .show()
-    }
-    private fun insertExampleCategories() {
-        val exampleCategories = listOf(
-            Category(id = 0, name = "Food", icon = "🍔", description = "Expenses on food",1),
-            Category(id = 0, name = "Transport", icon = "🚗", description = "Expenses on transport",1),
-            Category(id = 0, name = "Salary", icon = "💰", description = "Income from salary",1),
-            Category(id = 0, name = "Entertainment", icon = "🎮", description = "Expenses on entertainment",1)
-        )
-
-        lifecycleScope.launch {
-            exampleCategories.forEach { category ->
-                categoryViewModel.insertCategory(category)
-            }
-            Toast.makeText(requireContext(), "Example categories added!", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun setupCategoryList() {
@@ -183,6 +171,7 @@ class CategoryFragment : Fragment() {
 
         // Set up the FloatingActionButton to open the dialog
     }
+
     fun calculateProgress(currentAmount: Double, goalAmount: Double): Int {
         if (goalAmount <= 0) {
             throw IllegalArgumentException("Goal amount must be greater than zero.")
@@ -228,30 +217,33 @@ class CategoryFragment : Fragment() {
             .setView(dialogView)
             .setTitle("Add Category")
             .setPositiveButton("Add") { dialog, _ ->
-                val name = dialogView.findViewById<EditText>(R.id.dialogCategoryName)?.text.toString()
-                val description = dialogView.findViewById<EditText>(R.id.dialogCategoryDescription)?.text.toString()
+                val nameInput = dialogView.findViewById<EditText>(R.id.dialogCategoryName)
+                val descriptionInput = dialogView.findViewById<EditText>(R.id.dialogCategoryDescription)
                 val iconSpinner = dialogView.findViewById<Spinner>(R.id.dialogIconSelector)
-                val selectedIcon = iconSpinner.selectedItem.toString()
 
-                if (name.isBlank() || selectedIcon.isBlank()) {
+                val name = nameInput?.text?.toString()?.trim()
+                val description = descriptionInput?.text?.toString()?.trim()
+                val selectedIcon = iconSpinner?.selectedItem?.toString()?.trim()?.split("/")?.lastOrNull()?.trim()
+                if (name.isNullOrBlank() || selectedIcon.isNullOrBlank()) {
                     Toast.makeText(requireContext(), "Please fill in all required fields!", Toast.LENGTH_SHORT).show()
                 } else {
                     val newCategory = Category(
                         id = 0,
                         name = name,
                         icon = selectedIcon, // Assign the selected icon
-                        description = description,
+                        description = description ?: "",
                         userId = userIdAdd // Optional user ID
                     )
                     categoryViewModel.insertCategory(newCategory)
                     Toast.makeText(requireContext(), "Category Added Successfully!", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
                 }
-                dialog.dismiss()
             }
             .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
 
         dialogBuilder.create().show()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

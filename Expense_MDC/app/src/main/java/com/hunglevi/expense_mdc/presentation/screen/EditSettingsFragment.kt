@@ -51,6 +51,7 @@ class EditSettingsFragment : Fragment() {
         val username = sharedPref?.getString("USERNAME", null)
         val email = sharedPref?.getString("EMAIL", null)
         val userImage = sharedPref?.getString("PROFILE_IMAGE_URI", null)
+        binding.userName.text = username
         binding.usernameInput.setText(username)
         binding.emailInput.setText(email)
         // Load profile image

@@ -260,6 +260,21 @@ class TransactionFragment : Fragment() {
 
         // Access views in the dialog
         val categorySpinner = dialogView.findViewById<Spinner>(R.id.transactionCategorySpinner)
+
+        // Fetch categories from the ViewModel or Repository
+        viewLifecycleOwner.lifecycleScope.launch {
+            categoryViewModel.categories.collect { categoryList ->
+                val categories = if (categoryList.isNotEmpty()) {
+                    categoryList.map { it.name }
+                } else {
+                    listOf("No categories available") // Placeholder if the list is empty
+                }
+
+                val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+                categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                categorySpinner.adapter = categoryAdapter
+            }
+        }
         val amountInput = dialogView.findViewById<EditText>(R.id.transactionAmountInput)
         val descriptionInput = dialogView.findViewById<EditText>(R.id.transactionDescriptionInput)
         val dateInput = dialogView.findViewById<EditText>(R.id.transactionDateInput)

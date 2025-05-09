@@ -15,6 +15,7 @@ class CategoryAdapter(
     inner class CategoryViewHolder(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(category: Category) {
+
             binding.categoryName.text = category.name
             binding.categoryIcon.setImageResource(getIconResource(category.icon)) // Example method to load icon
             binding.root.setOnClickListener {
@@ -23,8 +24,10 @@ class CategoryAdapter(
         }
 
         private fun getIconResource(icon: String): Int {
-            // Map icon name to drawable resource (you'll need to implement this)
-            return R.drawable.category // Replace with actual logic
+            val context = binding.root.context
+            val iconName = icon.substringBeforeLast(".") // Remove the file extension
+            val resourceId = context.resources.getIdentifier(iconName, "drawable", context.packageName)
+            return if (resourceId != 0) resourceId else R.drawable.category // Fallback to a default icon
         }
     }
 

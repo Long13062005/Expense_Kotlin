@@ -1,14 +1,14 @@
 package com.hunglevi.expense_be.services;
 
-import com.hunglevi.expense_be.model.Category;
+import com.hunglevi.expense_be.model.Feedback;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface ICategoryService {
-    List<Category> getAllCategories();
-    List<Category> getAllCategoriesByUserId(Integer userId);
-    Category getCategoryById(Integer id);
-    List<Category> searchCategoriesByName(String searchTerm);
-    Category saveCategory(Category category);
-    void deleteCategory(Integer id);
+public interface IFeedbackService {
+    List<Feedback> getAllFeedbacks();
+    Optional<Feedback> getFeedbackById(Integer id);
+    Feedback saveFeedback(Feedback feedback);
+    void deleteFeedback(Integer id);
+    List<Feedback> searchFeedbacksByContent(String searchTerm);
 }
